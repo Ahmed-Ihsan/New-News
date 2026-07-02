@@ -1,0 +1,15 @@
+# Tech News Aggregator & Trend Analyzer
+# No external pip dependencies — uses Python standard library only.
+#
+# Python 3.10+ required (uses PEP 604 union type syntax: str | None)
+#
+# Standard library modules used:
+#   - urllib.request, urllib.parse, urllib.error
+#   - json, xml.etree.ElementTree
+#   - concurrent.futures
+#   - logging, ssl, re, time, datetime
+#   - argparse, pathlib, abc
+#
+# To run:
+#   python -m tech_news_aggregator
+#   python trend_analyzer.py

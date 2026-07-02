@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Output files (generated reports)
+news_output/
+*.md.bak
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment / secrets
+.env
+.env.local
+*.secret
+
+# Test temp files
+_check_*.py
+_test_*.py
+_find_*.py
+_verify.py
