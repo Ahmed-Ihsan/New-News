@@ -26,6 +26,14 @@ from ..core import (
 # ─────────────────────────────────────────────────────────────
 
 IRAQ_COMMUNITIES = {
+    "الميكرز (Makers)": {
+        "url": "https://makersiq.org",
+        "keywords": ["makers", "makers of baghdad", "makersiq", "الميكرز"],
+    },
+    "المحطة (The Station)": {
+        "url": "https://the-station.iq",
+        "keywords": ["the station", "the station baghdad", "station iq", "المحطة"],
+    },
     "Re:Coded Iraq": {
         "url": "https://www.re-coded.com",
         "keywords": ["re:coded", "recoded", "re-coded iraq"],
@@ -33,38 +41,6 @@ IRAQ_COMMUNITIES = {
     "Five One Labs": {
         "url": "https://www.fiveonelabs.com",
         "keywords": ["five one labs", "fiveonelabs", "5one labs"],
-    },
-    "Iraq Tech": {
-        "url": None,
-        "keywords": ["iraq tech", "iraqi tech", "العراق تقني"],
-    },
-    "Baghdad Tech": {
-        "url": None,
-        "keywords": ["baghdad tech", "baghdad meetup", "بغداد التقنية"],
-    },
-    "Erbil Tech": {
-        "url": None,
-        "keywords": ["erbil tech", "erbil meetup", "أربيل التقنية"],
-    },
-    "Mosul Tech": {
-        "url": None,
-        "keywords": ["mosul tech", "mosul technology", "الموصل التقنية"],
-    },
-    "Basra Tech": {
-        "url": None,
-        "keywords": ["basra tech", "basra technology", "البصرة التقنية"],
-    },
-    "Iraq Developers": {
-        "url": None,
-        "keywords": ["iraqi developers", "iraq developers", "مطورو العراق"],
-    },
-    "Python Iraq": {
-        "url": None,
-        "keywords": ["python iraq", "بايثون العراق"],
-    },
-    "Tech Iraq Conference": {
-        "url": None,
-        "keywords": ["tech iraq conference", "tech iraq event", "مؤتمر التقنية العراق"],
     },
 }
 
@@ -78,6 +54,8 @@ GOOGLE_NEWS_QUERIES = [
     '"Iraq" "developer" OR "programming" OR "coding" "community" OR "bootcamp"',
     '"Iraq" "tech conference" OR "tech event" OR "hackathon" OR "startup weekend"',
     '"Erbil" OR "Baghdad" OR "Basra" "tech" OR "startup" OR "developer"',
+    '"Makers" Baghdad Iraq',
+    '"The Station" Baghdad Iraq tech OR startup',
     '"Re:Coded" Iraq',
     '"Five One Labs" Iraq',
     '"Iraq" "tech hub" OR "innovation hub" OR "accelerator" OR "incubator"',
@@ -85,6 +63,8 @@ GOOGLE_NEWS_QUERIES = [
     '"العراق" "تقني" OR "تقنية" "برمجة" OR "مطورين" OR "ناشئة" 2026',
     '"العراق" "مؤتمر تقني" OR "هاكاثون" OR "فعالية تقنية"',
     '"بغداد" OR "أربيل" "تقني" OR "برمجة" OR "مطورين"',
+    '"الميكرز" العراق تقني OR برمجة',
+    '"المحطة" بغداد تقني OR ريادة OR ابتكار',
 ]
 
 # ─────────────────────────────────────────────────────────────
@@ -93,13 +73,15 @@ GOOGLE_NEWS_QUERIES = [
 
 DDG_SITE_QUERIES = [
     'site:facebook.com "Iraq tech" OR "Iraqi developers" OR "Re:Coded Iraq"',
-    'site:facebook.com "Five One Labs" OR "Python Iraq" OR "Baghdad tech"',
+    'site:facebook.com "Five One Labs" OR "Makers Baghdad" OR "The Station Baghdad"',
     'site:meetup.com Iraq tech OR developer OR programming',
     'site:linkedin.com "Iraq tech" OR "Iraqi developer" OR "tech community Iraq"',
     'site:eventbrite.com Iraq tech OR hackathon OR startup',
     'site:instagram.com "Iraq tech" OR "Iraqi developers" OR "Re:Coded"',
+    'site:instagram.com "Makers Baghdad" OR "The Station Baghdad"',
     '"العراق" تقني OR برمجة OR مطورين site:facebook.com',
     '"العراق" مؤتمر تقني OR هاكاثون site:facebook.com',
+    '"الميكرز" OR "المحطة" site:facebook.com',
 ]
 
 # ─────────────────────────────────────────────────────────────
@@ -109,7 +91,8 @@ DDG_SITE_QUERIES = [
 COMMUNITY_SITES = {
     "Re:Coded": "https://www.re-coded.com/blog",
     "Five One Labs": "https://www.fiveonelabs.com/blog",
-    "Iraq Tech Group": "https://iraqtech.com",
+    "الميكرز (Makers)": "https://makersiq.org",
+    "المحطة (The Station)": "https://the-station.iq",
 }
 
 # ─────────────────────────────────────────────────────────────

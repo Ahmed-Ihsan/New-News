@@ -13,7 +13,16 @@ def main():
     parser = argparse.ArgumentParser(description="مُجمّع الأخبار التقنية")
     parser.add_argument("--search", "-s", type=str, default=None,
                         help="كلمة مفتاحية للبحث في الأخبار")
+    parser.add_argument("--tui", action="store_true",
+                        help="تشغيل واجهة المستخدم الطرفية (TUI)")
     args = parser.parse_args()
+
+    # وضع TUI
+    if args.tui:
+        from .tui import TechNewsApp
+        app = TechNewsApp(search_key=args.search)
+        app.run()
+        return
 
     print("""
     ╔══════════════════════════════════════════════════════════╗
@@ -25,7 +34,7 @@ def main():
     ║    👩‍💻 Dev.to         🦞 Lobsters    🐱 Product Hunt     ║
     ║    🔬 arXiv          🐦 X (Twitter)  📺 YouTube          ║
     ║    ✍️ Medium          🏢 Company Blogs  📰 Tech News      ║
-    ║    🌐 Google News                                         ║
+    ║    🌐 Google News    🇮🇶 Iraq Tech                      ║
     ╚══════════════════════════════════════════════════════════╝
     """)
 
