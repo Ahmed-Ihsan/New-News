@@ -1,10 +1,11 @@
-from ..core import NewsSource, fetch_json, logger, MAX_STORIES_PER_SOURCE, sanitize_text
+from ..core import NewsSource, fetch_json, logger, MAX_STORIES_PER_SOURCE, sanitize_text, EXCLUDED_REPOS
 
 
 class GitHubTrendingSource(NewsSource):
     name = "GitHub Trending"
     icon = "🐙"
     API_URL = "https://api.github.com/search/repositories"
+    MAX_STORIES = 5
 
     def fetch(self) -> list[dict]:
         logger.info(f"{self.icon} جارٍ جلب أخبار {self.name}...")
@@ -19,8 +20,11 @@ class GitHubTrendingSource(NewsSource):
             if not data or "items" not in data:
                 logger.warning(f"  ⚠️ لا توجد نتائج من {self.name}")
                 return stories
-            for repo in data["items"][:MAX_STORIES_PER_SOURCE]:
+            for repo in data["items"][:MAX_STORIES_PER_SOURCE * 3]:
                 try:
+                    full_name = repo.get("full_name", "")
+                    if full_name in EXCLUDED_REPOS:
+                        continue
                     description = repo.get("description") or ""
                     topics = repo.get("topics", []) or []
                     stories.append({
@@ -36,6 +40,7 @@ class GitHubTrendingSource(NewsSource):
                 except Exception as e:
                     logger.warning(f"تخطي مستودع: {e}")
             logger.info(f"  ✅ تم جلب {len(stories)} خبر من {self.name}")
+            return stories[:self.MAX_STORIES]
         except Exception as e:
             logger.error(f"  ❌ فشل جلب {self.name}: {e}")
         return stories

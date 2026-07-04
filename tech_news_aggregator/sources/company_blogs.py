@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from ..core import (
     NewsSource, fetch_html, logger,
     MAX_STORIES_PER_SOURCE, sanitize_text, is_tool_launch,
+    is_recent, MAX_NEWS_AGE_DAYS,
 )
 
 
@@ -37,17 +38,42 @@ def _find_local(parent, name: str):
 class CompanyBlogsSource(NewsSource):
     name = "Company Blogs"
     icon = "🏢"
-    PER_BLOG = 5
+    PER_BLOG = 1
+    MAX_STORIES = 10
 
     BLOGS = {
-        "Google": "https://blog.google/rss/",
+        # AI
         "OpenAI": "https://openai.com/blog/rss.xml",
-        "Meta": "https://about.fb.com/feed/",
-        "NVIDIA": "https://blogs.nvidia.com/feed/",
-        "Microsoft": "https://blogs.microsoft.com/feed/",
-        "AWS": "https://aws.amazon.com/blogs/aws/feed/",
-        "GitHub": "https://github.blog/feed/",
         "Google DeepMind": "https://deepmind.google/blog/rss.xml",
+        # Cloud
+        "Google": "https://blog.google/rss/",
+        "AWS": "https://aws.amazon.com/blogs/aws/feed/",
+        "Microsoft": "https://blogs.microsoft.com/feed/",
+        "Cloudflare": "https://blog.cloudflare.com/rss/",
+        # Social
+        "Meta": "https://about.fb.com/feed/",
+        # Hardware
+        "NVIDIA": "https://blogs.nvidia.com/feed/",
+        "Apple": "https://developer.apple.com/news/rss/news.rss",
+        # DevOps
+        "GitHub": "https://github.blog/feed/",
+        "GitHub Engineering": "https://github.blog/engineering/feed/",
+        "Docker": "https://www.docker.com/blog/feed/",
+        "HashiCorp": "https://www.hashicorp.com/blog/feed.xml",
+        "Kubernetes": "https://kubernetes.io/feed.xml",
+        # Payments
+        "Stripe": "https://stripe.com/blog/feed.rss",
+        # Streaming
+        "Netflix": "https://netflixtechblog.com/feed",
+        # Languages
+        "Rust": "https://blog.rust-lang.org/feed.xml",
+        "Python": "https://blog.python.org/feeds/posts/default",
+        "Node.js": "https://nodejs.org/en/feed/blog.xml",
+        "JetBrains": "https://blog.jetbrains.com/feed/",
+        # Database
+        "PostgreSQL": "https://planet.postgresql.org/rss20.xml",
+        # Security
+        "Google Security": "https://security.googleblog.com/rss.xml",
     }
 
     def _parse_feed(self, xml: str, company: str) -> list[dict]:
@@ -67,6 +93,8 @@ class CompanyBlogsSource(NewsSource):
                     published = _findtext_local(item, "pubdate") or _findtext_local(item, "published")
                     description = _findtext_local(item, "description")
                     if not title:
+                        continue
+                    if not is_recent(published, MAX_NEWS_AGE_DAYS):
                         continue
                     if is_tool_launch(title, description):
                         stories.append({
@@ -90,6 +118,8 @@ class CompanyBlogsSource(NewsSource):
                     published = _findtext_local(entry, "published") or _findtext_local(entry, "updated")
                     description = _findtext_local(entry, "summary") or _findtext_local(entry, "content")
                     if not title:
+                        continue
+                    if not is_recent(published, MAX_NEWS_AGE_DAYS):
                         continue
                     if is_tool_launch(title, description):
                         stories.append({
@@ -130,7 +160,7 @@ class CompanyBlogsSource(NewsSource):
                     try:
                         blog_stories = future.result()
                         for story in blog_stories:
-                            if len(stories) >= MAX_STORIES_PER_SOURCE:
+                            if len(stories) >= self.MAX_STORIES:
                                 break
                             stories.append(story)
                     except Exception as e:

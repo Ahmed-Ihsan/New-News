@@ -45,3 +45,5 @@ _check_*.py
 _test_*.py
 _find_*.py
 _verify.py
+test_cve*.py
+test_*.py

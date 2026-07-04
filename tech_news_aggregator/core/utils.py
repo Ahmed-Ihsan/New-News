@@ -78,3 +78,38 @@ def is_tool_launch(title: str, description: str = "") -> bool:
     from .config import TOOL_LAUNCH_KEYWORDS
     text = (title + " " + description).lower()
     return any(kw in text for kw in TOOL_LAUNCH_KEYWORDS)
+
+
+def is_recent(date_str: str, max_days: int = 14) -> bool:
+    """فحص ما إذا كان التاريخ ضمن آخر max_days يوماً."""
+    if not date_str:
+        return True
+    now = datetime.now(timezone.utc)
+    formats = [
+        "%a, %d %b %Y %H:%M:%S %Z",
+        "%a, %d %b %Y %H:%M:%S %z",
+        "%a, %d %b %Y %H:%M:%S GMT",
+        "%a, %d %b %Y %H:%M:%S",
+        "%a, %d %b %Y",
+        "%Y-%m-%dT%H:%M:%S%z",
+        "%Y-%m-%dT%H:%M:%SZ",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M",
+        "%Y-%m-%d",
+    ]
+    for fmt in formats:
+        try:
+            dt = datetime.strptime(date_str.strip()[:30], fmt)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            age_days = (now - dt).total_seconds() / 86400
+            return age_days <= max_days
+        except (ValueError, TypeError):
+            continue
+    return True
+
+
+def normalize_title(title: str) -> str:
+    """تطبيع العنوان لإزالة التكرار عبر المصادر."""
+    normalized = re.sub(r'[^a-zA-Z0-9\u0600-\u06FF]', '', title.lower())[:60]
+    return normalized

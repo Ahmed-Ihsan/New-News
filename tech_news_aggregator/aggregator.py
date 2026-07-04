@@ -9,22 +9,15 @@ from datetime import datetime
 from pathlib import Path
 
 from .core.config import OUTPUT_DIR, logger
-from .report import MarkdownReportGenerator
+from .report import MarkdownReportGenerator, export_to_pdf, SocialMediaAdapter
 from .sources import (
     HackerNewsSource,
-    RedditSource,
     GitHubTrendingSource,
-    DevToSource,
     LobstersSource,
-    ProductHuntSource,
-    ArxivSource,
-    XSource,
-    YouTubeSource,
-    MediumSource,
     CompanyBlogsSource,
-    TechNewsSource,
-    GoogleNewsSource,
-    IraqTechSource,
+    CVESecuritySource,
+    StackOverflowSource,
+    YouTubeNewsSource,
 )
 
 
@@ -35,19 +28,12 @@ class TechNewsAggregator:
         self.search_key = search_key.lower() if search_key else None
         self.sources = {
             "hacker_news": HackerNewsSource(),
-            "reddit": RedditSource(),
             "github": GitHubTrendingSource(),
-            "devto": DevToSource(),
             "lobsters": LobstersSource(),
-            "product_hunt": ProductHuntSource(),
-            "arxiv": ArxivSource(),
-            "x": XSource(search_key=self.search_key),
-            "youtube": YouTubeSource(),
-            "medium": MediumSource(),
             "company_blogs": CompanyBlogsSource(),
-            "tech_news": TechNewsSource(),
-            "google_news": GoogleNewsSource(search_key=self.search_key),
-            "iraq_tech": IraqTechSource(search_key=self.search_key),
+            "cve_security": CVESecuritySource(),
+            "stackoverflow": StackOverflowSource(),
+            "youtube_news": YouTubeNewsSource(),
         }
         self.results: dict[str, list[dict]] = {}
         self.stats: dict[str, int] = {}
@@ -86,6 +72,8 @@ class TechNewsAggregator:
                 self.results[key] = filtered_stories
                 self.stats[key] = len(filtered_stories)
 
+        self._deduplicate()
+
         duration = time.time() - start_time
         self.stats["_duration"] = duration
 
@@ -94,30 +82,47 @@ class TechNewsAggregator:
         logger.info(f"✅ اكتمل التجميع: {total} خبر في {duration:.1f} ثانية")
         logger.info("=" * 60)
 
+    def _deduplicate(self) -> None:
+        """إزالة الأخبار المكررة عبر المصادر."""
+        from .core.utils import normalize_title
+        seen: set[str] = set()
+        for key in self.results:
+            filtered = []
+            for story in self.results[key]:
+                norm = normalize_title(story.get("title", ""))
+                if norm and norm not in seen:
+                    seen.add(norm)
+                    filtered.append(story)
+            self.results[key] = filtered
+            self.stats[key] = len(filtered)
+
     def generate_report(self) -> Path:
         """إنشاء تقرير Markdown."""
         report = MarkdownReportGenerator(search_key=self.search_key)
 
         report.add_header()
+        report.add_top_stories(self.results)
         report.add_hacker_news(self.results.get("hacker_news", []))
-        report.add_reddit(self.results.get("reddit", []))
         report.add_github_trending(self.results.get("github", []))
-        report.add_devto(self.results.get("devto", []))
         report.add_lobsters(self.results.get("lobsters", []))
-        report.add_product_hunt(self.results.get("product_hunt", []))
-        report.add_arxiv(self.results.get("arxiv", []))
-        report.add_x(self.results.get("x", []))
-        report.add_youtube(self.results.get("youtube", []))
-        report.add_medium(self.results.get("medium", []))
         report.add_company_blogs(self.results.get("company_blogs", []))
-        report.add_tech_news(self.results.get("tech_news", []))
-        report.add_google_news(self.results.get("google_news", []))
-        report.add_iraq_tech(self.results.get("iraq_tech", []))
+        report.add_cve_security(self.results.get("cve_security", []))
+        report.add_stackoverflow(self.results.get("stackoverflow", []))
+        report.add_youtube_news(self.results.get("youtube_news", []))
         report.add_footer(self.stats)
 
         filepath = report.save()
         logger.info(f"📄 تم حفظ التقرير: {filepath}")
         return filepath
+
+    def export_pdf(self, md_path: Path) -> Path:
+        """تصدير التقرير إلى PDF."""
+        return export_to_pdf(md_path)
+
+    def export_social(self, platform: str = "telegram", image: bool = False) -> Path:
+        """تصدير البوست الاجتماعي."""
+        adapter = SocialMediaAdapter(self.results, self.stats)
+        return adapter.save(platform, image=image)
 
     def save_raw_json(self) -> Path:
         """حفظ البيانات الخام في ملف JSON."""

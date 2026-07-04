@@ -43,7 +43,7 @@ OUTPUT_DIR = Path(__file__).parent.parent.parent / "news_output"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 # عدد الأخبار من كل مصدر
-MAX_STORIES_PER_SOURCE = 15
+MAX_STORIES_PER_SOURCE = 10
 
 # مهلة الاتصال (ثواني)
 REQUEST_TIMEOUT = 15
@@ -67,3 +67,27 @@ TOOL_LAUNCH_KEYWORDS = [
     "debut", "open source", "preview", "beta", "generally available",
     "updates", "upgrades", "new model", "new api", "new platform",
 ]
+
+# ─────────────────────────────────────────────────────────────
+# معايير الفلترة الصارمة
+# ─────────────────────────────────────────────────────────────
+
+# الحد الأدنى لنقاط Hacker News
+MIN_HN_SCORE = 50
+
+# الحد الأدنى لنقاط Lobsters
+MIN_LOBSTERS_SCORE = 5
+
+# أقصى عمر خبر (أيام)
+MAX_NEWS_AGE_DAYS = 14
+
+# مشاريع GitHub مستثناة (تظهر كل يوم، ليست "جديدة")
+EXCLUDED_REPOS = {
+    "sindresorhus/awesome",
+    "freeCodeCamp/freeCodeCamp",
+    "public-apis/public-apis",
+    "EbookFoundation/free-programming-books",
+    "awesome-selfhosted/awesome-selfhosted",
+    "vinta/awesome-python",
+    "kamranahmedse/developer-roadmap",
+}

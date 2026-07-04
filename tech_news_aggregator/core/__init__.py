@@ -11,6 +11,10 @@ from .config import (
     HEADERS,
     SSL_CONTEXT,
     TOOL_LAUNCH_KEYWORDS,
+    MIN_HN_SCORE,
+    MIN_LOBSTERS_SCORE,
+    MAX_NEWS_AGE_DAYS,
+    EXCLUDED_REPOS,
 )
 from .http import fetch_json, fetch_html
 from .utils import (
@@ -20,6 +24,8 @@ from .utils import (
     ddg_extract_results,
     ddg_clean_link,
     is_tool_launch,
+    is_recent,
+    normalize_title,
 )
 from .base import NewsSource
 
@@ -31,6 +37,10 @@ __all__ = [
     "HEADERS",
     "SSL_CONTEXT",
     "TOOL_LAUNCH_KEYWORDS",
+    "MIN_HN_SCORE",
+    "MIN_LOBSTERS_SCORE",
+    "MAX_NEWS_AGE_DAYS",
+    "EXCLUDED_REPOS",
     "fetch_json",
     "fetch_html",
     "time_ago",
@@ -39,5 +49,7 @@ __all__ = [
     "ddg_extract_results",
     "ddg_clean_link",
     "is_tool_launch",
+    "is_recent",
+    "normalize_title",
     "NewsSource",
 ]
