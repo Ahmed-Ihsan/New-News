@@ -18,6 +18,7 @@ from .sources import (
     CVESecuritySource,
     StackOverflowSource,
     YouTubeNewsSource,
+    XSource,
 )
 
 
@@ -34,6 +35,7 @@ class TechNewsAggregator:
             "cve_security": CVESecuritySource(),
             "stackoverflow": StackOverflowSource(),
             "youtube_news": YouTubeNewsSource(),
+            "x": XSource(search_key=search_key),
         }
         self.results: dict[str, list[dict]] = {}
         self.stats: dict[str, int] = {}
@@ -109,6 +111,7 @@ class TechNewsAggregator:
         report.add_cve_security(self.results.get("cve_security", []))
         report.add_stackoverflow(self.results.get("stackoverflow", []))
         report.add_youtube_news(self.results.get("youtube_news", []))
+        report.add_x(self.results.get("x", []))
         report.add_footer(self.stats)
 
         filepath = report.save()

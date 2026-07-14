@@ -47,7 +47,7 @@ def main():
     ║  📡 المصادر:                                            ║
     ║    🟧 Hacker News     GitHub       🦞 Lobsters         ║
     ║    🏢 Company Blogs  �️ CVE Security  💬 Stack Overflow   ║
-    ║    📺 YouTube News                                        ║
+    ║    📺 YouTube News   🐦 X (Twitter)                       ║
     ╚══════════════════════════════════════════════════════════╝
     """)
 

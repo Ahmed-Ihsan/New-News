@@ -26,6 +26,7 @@ class SocialMediaAdapter:
         "cve_security": "CVE Security",
         "stackoverflow": "Stack Overflow",
         "youtube_news": "YouTube",
+        "x": "X",
     }
 
     SOURCE_ICONS = {
@@ -36,6 +37,7 @@ class SocialMediaAdapter:
         "cve_security": "🛡️",
         "stackoverflow": "💬",
         "youtube_news": "📺",
+        "x": "🐦",
     }
 
     def __init__(self, results: dict[str, list[dict]], stats: dict):
@@ -64,6 +66,8 @@ class SocialMediaAdapter:
                     score = 60
                 elif source_key == "stackoverflow":
                     score = 40
+                elif source_key == "x":
+                    score = 50
 
                 candidates.append({
                     "title": s.get("title", ""),
@@ -71,12 +75,13 @@ class SocialMediaAdapter:
                     "score": score,
                     "source": self.SOURCE_LABELS.get(source_key, source_key),
                     "source_key": source_key,
-                    "description": s.get("description", ""),
+                    "description": s.get("description") or s.get("snippet", ""),
                     "cvss": s.get("cvss", 0),
                     "cve_id": s.get("cve_id", ""),
                     "company": s.get("company", ""),
                     "stars": s.get("stars", 0),
                     "language": s.get("language", ""),
+                    "author": s.get("author", ""),
                 })
 
         candidates.sort(key=lambda x: x["score"], reverse=True)
@@ -119,6 +124,14 @@ class SocialMediaAdapter:
                 f"📺 *فيديو تقني جديد*\n\n"
                 f"[{item['title'][:80]}]({item['url']})\n"
                 f"🎬 {item['source']}"
+            )
+
+        if source_key == "x":
+            author = item.get("author") or "X"
+            return (
+                f"🐦 *منشور من {author}*\n\n"
+                f"[{item['title'][:90]}]({item['url']})\n"
+                f"📋 {item['description'][:150]}"
             )
 
         score_display = int(item["score"])

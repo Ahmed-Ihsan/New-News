@@ -1,9 +1,13 @@
 # Tech News Aggregator & Trend Analyzer
-# No external pip dependencies — uses Python standard library only.
 #
 # Python 3.10+ required (uses PEP 604 union type syntax: str | None)
 #
-# Standard library modules used:
+# External dependencies:
+#   - pywebview        # desktop GUI (web-based UI), used by `--gui`
+#     Install: pip install pywebview
+#     On Windows the pythonnet backend is pulled in automatically.
+#
+# Standard library modules used (no install needed):
 #   - urllib.request, urllib.parse, urllib.error
 #   - json, xml.etree.ElementTree
 #   - concurrent.futures
@@ -12,4 +16,6 @@
 #
 # To run:
 #   python -m tech_news_aggregator
+#   python -m tech_news_aggregator --gui
 #   python trend_analyzer.py
+pywebview>=6.0

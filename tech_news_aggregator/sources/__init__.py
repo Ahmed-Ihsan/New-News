@@ -16,6 +16,7 @@ from .company_blogs import CompanyBlogsSource
 from .cve_security import CVESecuritySource
 from .stackoverflow import StackOverflowSource
 from .youtube_news import YouTubeNewsSource
+from .x_twitter import XSource
 
 __all__ = [
     "HackerNewsSource",
@@ -25,4 +26,5 @@ __all__ = [
     "CVESecuritySource",
     "StackOverflowSource",
     "YouTubeNewsSource",
+    "XSource",
 ]

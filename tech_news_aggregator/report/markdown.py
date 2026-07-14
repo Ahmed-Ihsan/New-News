@@ -38,6 +38,8 @@ class MarkdownReportGenerator:
                     score = 60
                 elif source_key == "stackoverflow":
                     score = 40
+                elif source_key == "x":
+                    score = 50
 
                 badge = ""
                 if score >= 200 or (source_key == "cve_security" and s.get("cvss", 0) >= 9.0):
@@ -51,7 +53,7 @@ class MarkdownReportGenerator:
                     "hacker_news": "HN", "github": "GitHub",
                     "lobsters": "Lobsters", "company_blogs": "CoBlog",
                     "cve_security": "CVE", "stackoverflow": "SO",
-                    "youtube_news": "YouTube",
+                    "youtube_news": "YouTube", "x": "X",
                 }.get(source_key, source_key)
 
                 candidates.append({
@@ -110,7 +112,7 @@ class MarkdownReportGenerator:
 ---
 
 > **مُجمّع تلقائي** من أفضل المصادر التقنية العالمية
-> Hacker News • GitHub • Lobsters • Company Blogs • CVE Security • Stack Overflow • YouTube
+> Hacker News • GitHub • Lobsters • Company Blogs • CVE Security • Stack Overflow • YouTube • X (Twitter)
 > 🏢 Company Blogs (22 شركة) — تتبع إطلاقات الأدوات والتحديثات الرسمية (آخر 14 يوم)
 
 ---
@@ -270,6 +272,27 @@ class MarkdownReportGenerator:
         section += "\n---\n"
         self.sections.append(section)
 
+    def add_x(self, stories: list[dict]) -> None:
+        """قسم منشورات X (تويتر) من حسابات تقنية مختارة."""
+        if not stories:
+            return
+
+        section = """
+## 🐦 X (Twitter) - منشورات الحسابات التقنية
+
+> أحدث المنشورات من حسابات تقنية مختارة: OpenAI, Google DeepMind, Anthropic, NVIDIA, GitHub, Vercel, TechCrunch, The Verge, Ars Technica, Y Combinator
+
+| # | المنشور | 👤 الحساب |
+|---|---------|-----------|
+"""
+        for i, s in enumerate(stories, 1):
+            title = s.get("title", "")
+            title_link = f"[{title[:80]}{'...' if len(title) > 80 else ''}]({s.get('url', '')})"
+            section += f"| {i} | {title_link} | `{s.get('author', 'مجهول')}` |\n"
+
+        section += "\n---\n"
+        self.sections.append(section)
+
     def add_footer(self, stats: dict) -> None:
         """إضافة تذييل التقرير."""
         total = sum(v for k, v in stats.items() if k != "_duration" and isinstance(v, int))
@@ -289,6 +312,7 @@ class MarkdownReportGenerator:
 | �️ CVE Security | {stats.get('cve_security', 0)} | {'✅' if stats.get('cve_security', 0) > 0 else '❌'} |
 | 💬 Stack Overflow | {stats.get('stackoverflow', 0)} | {'✅' if stats.get('stackoverflow', 0) > 0 else '❌'} |
 | 📺 YouTube News | {stats.get('youtube_news', 0)} | {'✅' if stats.get('youtube_news', 0) > 0 else '❌'} |
+| 🐦 X (Twitter) | {stats.get('x', 0)} | {'✅' if stats.get('x', 0) > 0 else '❌'} |
 | **الإجمالي** | **{total}** | ⏱️ {duration:.1f}s |
 
 ---

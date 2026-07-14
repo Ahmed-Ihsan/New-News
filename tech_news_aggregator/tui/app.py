@@ -33,7 +33,7 @@ from ..sources import (
     HackerNewsSource, GitHubTrendingSource,
     LobstersSource, CompanyBlogsSource,
     CVESecuritySource, StackOverflowSource,
-    YouTubeNewsSource,
+    YouTubeNewsSource, XSource,
 )
 
 # ترتيب المصادر للألسنة (tabs)
@@ -45,6 +45,7 @@ SOURCE_ORDER = [
     ("cve_security", "CVE", CVESecuritySource),
     ("stackoverflow", "SO Blog", StackOverflowSource),
     ("youtube_news", "YouTube", YouTubeNewsSource),
+    ("x", "X", XSource),
 ]
 
 
@@ -207,7 +208,8 @@ class TechNewsApp(App):
                 filtered = [
                     s for s in stories
                     if query in (s.get("title", "") +
-                                 s.get("description", "")).lower()
+                                 s.get("description", "") +
+                                 s.get("snippet", "")).lower()
                 ]
             else:
                 filtered = stories

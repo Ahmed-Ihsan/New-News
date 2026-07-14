@@ -47,3 +47,9 @@ _find_*.py
 _verify.py
 test_cve*.py
 test_*.py
+
+x_fetch_tests
+AGENTS.override
+HARNESS_BOOTSTRAP.md
+.devin
+*.json
